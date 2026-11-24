@@ -1,5 +1,5 @@
 // ===== SERVICE WORKER - Typing Job PWA =====
-const CACHE_NAME = 'typing-job-v1';
+const CACHE_NAME = 'typing-job-v1.1';
 const ASSETS = [
   '/Typing-jobs-Rahmot/',
   '/Typing-jobs-Rahmot/index.html',
