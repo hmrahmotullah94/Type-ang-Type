@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a237e" />
+  <meta name="description" content="বাংলা ও ইংরেজি টাইপিং অনুশীলনের অফলাইন PWA" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Typing Job" />
+  <link rel="manifest" href="/Typing-jobs-Rahmot/manifest.json" />
+  <link rel="apple-touch-icon" href="/Typing-jobs-Rahmot/icon-192.png" />
+  <title>Typing Job - টাইপিং অনুশীলন</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⌨️</span>
+        <span class="logo-text">Typing Job</span>
+      </div>
+      <div class="header-controls">
+        <button class="btn-icon" id="themeToggle" title="থিম পরিবর্তন">🌙</button>
+        <button class="btn-icon" id="leaderboardBtn" title="লিডারবোর্ড">🏆</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main App -->
+  <main class="app">
+
+    <!-- Language & Mode Selector -->
+    <section class="controls-bar">
+      <div class="lang-tabs">
+        <button class="tab-btn active" data-lang="bn">বাংলা</button>
+        <button class="tab-btn" data-lang="en">English</button>
+      </div>
+      <div class="mode-tabs">
+        <button class="mode-btn active" data-mode="time" data-time="60">১ মিনিট</button>
+        <button class="mode-btn" data-mode="time" data-time="180">৩ মিনিট</button>
+        <button class="mode-btn" data-mode="time" data-time="300">৫ মিনিট</button>
+        <button class="mode-btn" data-mode="words">শব্দ মোড</button>
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">সময়</span>
+        <span class="stat-value" id="timerDisplay">60</span>
+        <span class="stat-unit">সেক</span>
+      </div>
+      <div class="stat-item highlight">
+        <span class="stat-label">WPM</span>
+        <span class="stat-value" id="wpmDisplay">0</span>
+        <span class="stat-unit">শব্দ/মিনিট</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">নির্ভুলতা</span>
+        <span class="stat-value" id="accuracyDisplay">100</span>
+        <span class="stat-unit">%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">সঠিক</span>
+        <span class="stat-value" id="correctDisplay">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">ভুল</span>
+        <span class="stat-value error" id="errorDisplay">0</span>
+      </div>
+    </section>
+
+    <!-- Typing Area -->
+    <section class="typing-section">
+      <div class="text-display" id="textDisplay"></div>
+      <textarea
+        class="typing-input"
+        id="typingInput"
+        placeholder="এখানে টাইপ শুরু করুন..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      ></textarea>
+      <div class="custom-text-toggle">
+        <button class="btn-link" id="customTextBtn">✏️ নিজের টেক্সট দিন</button>
+      </div>
+      <div class="custom-text-panel hidden" id="customTextPanel">
+        <textarea id="customTextInput" placeholder="এখানে আপনার নিজের টেক্সট লিখুন বা পেস্ট করুন..." rows="4"></textarea>
+        <button class="btn-primary" id="useCustomText">ব্যবহার করুন</button>
+        <button class="btn-secondary" id="cancelCustomText">বাতিল</button>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="action-bar">
+      <button class="btn-primary" id="startBtn">▶ শুরু করুন</button>
+      <button class="btn-secondary hidden" id="resetBtn">↺ রিসেট</button>
+      <button class="btn-secondary" id="newTextBtn">🔀 নতুন টেক্সট</button>
+    </section>
+
+    <!-- Result Modal -->
+    <div class="modal-overlay hidden" id="resultModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>🎉 ফলাফল</h2>
+        </div>
+        <div class="result-grid">
+          <div class="result-item">
+            <span class="result-label">WPM</span>
+            <span class="result-value" id="finalWpm">0</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">নির্ভুলতা</span>
+            <span class="result-value" id="finalAccuracy">0%</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">মোট শব্দ</span>
+            <span class="result-value" id="finalWords">0</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">ভুল</span>
+            <span class="result-value error" id="finalErrors">0</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">সময়</span>
+            <span class="result-value" id="finalTime">0s</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">স্কোর</span>
+            <span class="result-value gold" id="finalScore">0</span>
+          </div>
+        </div>
+        <div class="performance-bar">
+          <div class="perf-label" id="perfLabel">চমৎকার!</div>
+          <div class="perf-stars" id="perfStars">⭐⭐⭐</div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="retryBtn">↺ আবার চেষ্টা করুন</button>
+          <button class="btn-secondary" id="closeResultBtn">✕ বন্ধ করুন</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal-overlay hidden" id="leaderboardModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>🏆 সেরা স্কোর</h2>
+          <button class="btn-icon" id="closeLeaderboard">✕</button>
+        </div>
+        <div class="lb-tabs">
+          <button class="lb-tab active" data-lb="bn">বাংলা</button>
+          <button class="lb-tab" data-lb="en">English</button>
+        </div>
+        <div id="leaderboardList" class="leaderboard-list">
+          <p class="empty-msg">এখনো কোনো স্কোর নেই। টাইপিং শুরু করুন!</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-danger" id="clearScores">🗑️ সব মুছুন</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Offline Banner -->
+  <div class="offline-banner hidden" id="offlineBanner">
+    📴 আপনি অফলাইনে আছেন — সব ফিচার কাজ করছে!
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/Typing-jobs-Rahmot/sw.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.error('SW error:', err));
+      });
+    }
+  </script>
+</body>
+</html>
